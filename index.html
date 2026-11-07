@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customer Value Review · Lindström</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="kam-view">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="wordmark">Lindström</span>
+      <span class="product">Customer Value Review</span>
+    </div>
+    <label class="cust">Customer
+      <select id="customerSelect" aria-label="Customer"></select>
+    </label>
+    <div class="seg-soft" role="group" aria-label="Who is looking">
+      <button type="button" data-action="view" data-value="kam" aria-pressed="true">KAM view</button>
+      <button type="button" data-action="view" data-value="customer" aria-pressed="false">Customer view</button>
+    </div>
+    <button type="button" class="btn btn-line" data-action="drawer" aria-controls="assistantPanel"><span class="ico" data-icon="sparkle"></span>Assistant</button>
+    <button type="button" class="btn btn-navy" data-action="export-pptx"><span class="ico" data-icon="download"></span>Export PowerPoint</button>
+  </div>
+  <nav id="tabsHost" class="tabs no-print" aria-label="Pages"></nav>
+</header>
+
+<div class="layout">
+  <aside class="assistant" id="assistantPanel" aria-label="Review assistant">
+    <div class="as-head">
+      <div class="as-title">
+        <h2>Review assistant</h2>
+        <div class="as-row">
+          <button type="button" class="btn btn-line btn-sm" data-action="open-crm">Import CRM notes</button>
+          <button type="button" class="icon-btn" data-action="close-drawer" aria-label="Close assistant">×</button>
+        </div>
+      </div>
+      <div class="as-tabs" role="group" aria-label="Assistant mode">
+        <button type="button" data-action="mode" data-value="prep" aria-pressed="true">Prepare</button>
+        <button type="button" data-action="mode" data-value="meeting" aria-pressed="false">In the meeting</button>
+      </div>
+      <div class="as-hint-row"><div class="as-sub" id="modeHint"></div><button type="button" class="ai-status" id="aiStatus" data-action="ai-settings" title="AI settings">Offline rules</button></div>
+      <div class="chips kam-only" id="contextChips"></div>
+    </div>
+    <div class="as-msgs" id="messages" aria-live="polite"></div>
+    <div class="as-input">
+      <div class="quick" id="quick"></div>
+      <label class="sr-only" for="chatInput">Message</label>
+      <textarea id="chatInput" rows="2"></textarea>
+      <div class="as-row">
+        <span class="as-sub grow" id="inputHint">Enter to send · Shift+Enter for a new line</span>
+        <button type="button" class="btn btn-navy btn-sm" data-action="send">Send</button>
+      </div>
+    </div>
+    <details class="as-know kam-only" id="knowledgeBox">
+      <summary id="knowledgeTitle">Account knowledge</summary>
+      <div id="knowledge"></div>
+      <div class="as-row" style="margin-top:8px">
+        <button type="button" class="btn btn-line btn-sm" data-action="reset">Reset this account</button>
+      </div>
+    </details>
+  </aside>
+
+  <main class="content" id="content"></main>
+</div>
+
+
+<div class="modal" id="crmModal" role="dialog" aria-modal="true" aria-labelledby="crmTitle">
+  <div class="modal-card">
+    <h2 id="crmTitle" style="color:var(--navy);font-size:20px">Import notes from the CRM</h2>
+    <p class="lead" style="margin:0">Paste account notes from Microsoft Dynamics (one note per line). The demo is prefilled with a synthetic CRM extract for this customer. Each line is stored as account knowledge and can change priorities, focus sites, assumptions and value lines.</p>
+    <label class="sr-only" for="crmText">CRM notes</label>
+    <textarea id="crmText"></textarea>
+    <div class="as-row" style="justify-content:flex-end">
+      <button type="button" class="btn btn-line" data-action="close-crm">Cancel</button>
+      <button type="button" class="btn btn-navy" data-action="import-crm">Import notes</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="aiModal" role="dialog" aria-modal="true" aria-labelledby="aiTitle">
+  <div class="modal-card">
+    <h2 id="aiTitle" style="color:var(--navy);font-size:20px">AI settings</h2>
+    <p class="lead" style="margin:0">The assistant uses Google Gemini to answer questions and build charts and dashboards from the full data pack. The data stays in your browser: Gemini only receives the review summary, the table structure and the query results it asks for. Without a key, the offline rules answer instead.</p>
+    <label class="field">Gemini API key<input id="aiKey" type="password" autocomplete="off" spellcheck="false"></label>
+    <label class="field">Model<input id="aiModel" type="text" spellcheck="false" placeholder="gemini-3.5-flash"></label>
+    <p class="as-sub" id="aiMsg" role="status"></p>
+    <div class="as-row" style="justify-content:flex-end;flex-wrap:wrap">
+      <button type="button" class="btn btn-line" data-action="ai-off">Use offline rules</button>
+      <button type="button" class="btn btn-line" data-action="ai-test">Test</button>
+      <button type="button" class="btn btn-line" data-action="close-ai">Cancel</button>
+      <button type="button" class="btn btn-navy" data-action="ai-save">Save and use Gemini</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<button type="button" class="fab no-print" data-action="drawer" aria-label="Open the review assistant">Ask the assistant</button>
+
+<script src="js/icons.js"></script>
+<script src="js/data.js"></script>
+<script src="js/calc.js"></script>
+<script src="js/crm_demo.js"></script>
+<script src="js/assistant.js"></script>
+<script src="js/views.js"></script>
+<script src="js/data_full.js"></script>
+<script src="js/query.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/gemini.config.js"></script>
+<script src="js/gemini.js"></script>
+<script src="vendor/pptxgen.bundle.js"></script>
+<script src="js/export.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

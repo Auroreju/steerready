@@ -1,6 +1,7 @@
-/* Gemini settings. The key can also be pasted in the app (Assistant > AI settings), which overrides this file.
- * Anyone who can open this app can read this key: restrict or rotate it after the hackathon. */
+/* Gemini settings. Leave apiKey empty on a public site: open the site once with
+ * https://YOUR-SITE/#key=YOUR_KEY to store a key in that browser only (it is removed from the address bar),
+ * or paste a key in the app under Assistant > AI chip. */
 window.LVR_GEMINI_CONFIG = {
-  apiKey: 'AQ.Ab8RN6K8cxqlAGuom42hOiEm_wfM-yOjq1wbqPt7DlcZW-Nogg',
+  apiKey: '',
   model: 'gemini-3.5-flash'
 };

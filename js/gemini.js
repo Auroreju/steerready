@@ -39,6 +39,20 @@
     };
   }
   function saveConfig(c) { try { localStorage.setItem(STORE, JSON.stringify(c)); } catch (e) { /* storage unavailable */ } }
+
+  // Private link: https://.../#key=YOUR_KEY (optionally &model=...) stores the key in this browser only
+  // and removes it from the address bar, so the key never has to be in the repository.
+  (function keyFromLink() {
+    var h = (window.location.hash || '').replace(/^#/, '');
+    if (!/(^|&)key=/.test(h)) { return; }
+    var params = {};
+    h.split('&').forEach(function (kv) { var i = kv.indexOf('='); if (i > 0) { params[kv.slice(0, i)] = decodeURIComponent(kv.slice(i + 1)); } });
+    if (params.key) {
+      var prev = {}; try { prev = JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) { prev = {}; }
+      saveConfig({ apiKey: params.key.trim(), model: params.model || prev.model || '', disabled: false });
+    }
+    try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) { window.location.hash = ''; }
+  })();
   function enabled() { var c = config(); return !!c.apiKey && !c.disabled; }
 
   var SCHEMA_TEXT = null;
